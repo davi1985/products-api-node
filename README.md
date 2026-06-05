@@ -201,13 +201,27 @@ This project was built using the SOLID skills framework - a set of guidelines fo
 
 The skills also cover TDD practices, testing strategies, and clean code patterns. These aren't theoretical - they're applied throughout the codebase, from the domain entities to the controller method signatures.
 
+## Security measures
+
+The API includes several security protections by default:
+
+- **Helmet** - Security headers including CSP
+- **Rate limiting** - 100 requests per 15 minutes per IP (prevents brute force)
+- **CORS** - Configurable allowed origins via `CORS_ORIGIN` env var
+- **Body size limits** - 10kb max JSON payload (prevents large payload attacks)
+- **Input validation** - Name length (1-100 chars), price limits (0-999,999.99)
+- **Error sanitization** - Internal errors don't leak to client
+
+Security-related values are defined as constants in `src/config/validation-config.ts` rather than magic numbers scattered through the code.
+
 ## What I'd do differently in production
 
 - **Repository**: Swap in-memory for PostgreSQL or MongoDB
+- **Secrets**: Use a secrets manager (AWS Secrets Manager, HashiCorp Vault) instead of .env files
 - **Error handling**: Add proper error classes instead of generic messages
 - **Validation**: Use a library like Zod instead of manual checks
 - **Testing**: Add integration tests for the repository layer
-- **Config**: Move hardcoded values to environment variables
+- **Authentication**: Add JWT or OAuth for protected endpoints
 
 ## The commit history
 
