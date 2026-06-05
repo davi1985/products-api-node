@@ -1,6 +1,12 @@
 import { type Request, type Response } from "express";
 import { SortOptions } from "../domain/value-objects/sort-options.js";
 import type { ProductService } from "../application/product-service.js";
+import {
+  PRODUCT_NAME_MIN_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_MIN_PRICE,
+  PRODUCT_MAX_PRICE,
+} from "../config/validation-config.js";
 import type {
   GetAllProductsRequest,
   GetProductByIdRequest,
@@ -95,7 +101,15 @@ export class ProductController {
       const product = this.service.createProduct(createRequest);
       response.status(201).json(product.toJSON());
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Invalid data";
+      const isValidationError =
+        error instanceof Error &&
+        (error.message.includes("Invalid") ||
+          error.message.includes("required"));
+
+      const message = isValidationError
+        ? error.message
+        : "Failed to create product";
+
       response.status(400).json({ error: message });
     }
   }
@@ -109,7 +123,19 @@ export class ProductController {
       return undefined;
     }
 
-    return { name, price };
+    const trimmedName = name.trim();
+    if (
+      trimmedName.length < PRODUCT_NAME_MIN_LENGTH ||
+      trimmedName.length > PRODUCT_NAME_MAX_LENGTH
+    ) {
+      return undefined;
+    }
+
+    if (price < PRODUCT_MIN_PRICE || price > PRODUCT_MAX_PRICE) {
+      return undefined;
+    }
+
+    return { name: trimmedName, price };
   }
 
   delete({ request, response }: DeleteProductControllerRequest): void {
