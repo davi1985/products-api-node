@@ -214,15 +214,6 @@ The API includes several security protections by default:
 
 Security-related values are defined as constants in `src/config/validation-config.ts` rather than magic numbers scattered through the code.
 
-## What I'd do differently in production
-
-- **Repository**: Swap in-memory for PostgreSQL or MongoDB
-- **Secrets**: Use a secrets manager (AWS Secrets Manager, HashiCorp Vault) instead of .env files
-- **Error handling**: Add proper error classes instead of generic messages
-- **Validation**: Use a library like Zod instead of manual checks
-- **Testing**: Add integration tests for the repository layer
-- **Authentication**: Add JWT or OAuth for protected endpoints
-
 ## The commit history
 
 The project was built with atomic commits - each commit represents one logical change. If you're curious about the evolution, check the git log:
