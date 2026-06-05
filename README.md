@@ -214,6 +214,37 @@ The API includes several security protections by default:
 
 Security-related values are defined as constants in `src/config/validation-config.ts` rather than magic numbers scattered through the code.
 
+## Testing
+
+The project uses Vitest for testing with both unit and integration tests:
+
+```bash
+yarn test        # Watch mode for development
+yarn test:run    # Run once (for CI)
+yarn test:coverage  # With coverage report
+```
+
+### Test structure
+
+- **Unit tests** - Domain value objects, validators, service logic
+- **Integration tests** - HTTP controllers with supertest
+
+All 66 tests pass with excellent coverage:
+
+| Layer                 | Coverage | What's Tested                          |
+| --------------------- | -------- | -------------------------------------- |
+| **Domain/Entities**   | 100%     | Product, ProductId, Money, SortOptions |
+| **Application**       | 100%     | Service layer, validators              |
+| **Infrastructure**    | 100%     | In-memory repository                   |
+| **Controllers**       | ~95%     | HTTP endpoints with supertest          |
+| **Routes/Middleware** | 100%     | Express routing, security headers      |
+
+Tests include:
+
+- Unit tests for value objects and domain logic
+- Integration tests for HTTP layer
+- Rate limiting and security validations
+
 ## The commit history
 
 The project was built with atomic commits - each commit represents one logical change. If you're curious about the evolution, check the git log:
